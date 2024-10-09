@@ -27,41 +27,46 @@ app.post('/refresh', async (req, res) => {
    } = req.body;
 
    heat += 1
+   
+   var start = false
 
-   let data = JSON.stringify({
-      "attachment_urls": [
-         `${url}`
-      ]
-   });
-
-   const config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://discord.com/api/v9/' + endpoint,
-      headers: {
-         'Authorization': `Bot ${token}`,
-         'Content-Type': 'application/json',
-         'Cookie': cookie
-      },
-      data: data
+   while(!start){
+      start = true
+      
+      let data = JSON.stringify({
+         "attachment_urls": [
+            `${url}`
+         ]
+      });
+   
+      const config = {
+         method: 'post',
+         maxBodyLength: Infinity,
+         url: 'https://discord.com/api/v9/' + endpoint,
+         headers: {
+            'Authorization': `Bot ${token}`,
+            'Content-Type': 'application/json',
+            'Cookie': cookie
+         },
+         data: data
+      }
+   
+      const dc_res = await axios.request(config).catch(async (err) => {
+         console.log(err)
+         start = false
+      })
+   
+      if (!dc_res) return;
+   
+      var new_url = dc_res.data?.refreshed_urls[0]?.refreshed
+   
+      heat -= 1
+   
+      return res.json({
+         message: 'Media file successfully refreshed',
+         url: new_url
+      })
    }
-
-   const dc_res = await axios.request(config).catch(async (err) => {
-      console.log(err)
-      await sleep(1000)
-      start = false
-   })
-
-   if (!dc_res) return;
-
-   var new_url = dc_res.data?.refreshed_urls[0]?.refreshed
-
-   heat -= 1
-
-   return res.json({
-      message: 'Media file successfully refreshed',
-      url: new_url
-   })
 })
 
 setInterval(() => {
