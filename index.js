@@ -2,6 +2,7 @@ const express = require('express')
 const { name, id } = require('./config')
 const app = express()
 const cors = require('cors');
+const { default: axios } = require('axios');
 
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
