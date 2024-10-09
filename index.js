@@ -18,6 +18,10 @@ app.get('/', function (req, res) {
    })
 })
 
+const sleep = (ms) => new Promise((resolve) => {
+   setTimeout(() => { resolve() }, ms)
+})
+
 app.post('/refresh', async (req, res) => {
    const {
       url,
@@ -27,18 +31,18 @@ app.post('/refresh', async (req, res) => {
    } = req.body;
 
    heat += 1
-   
+
    var start = false
 
-   while(!start){
+   while (!start) {
       start = true
-      
+
       let data = JSON.stringify({
          "attachment_urls": [
             `${url}`
          ]
       });
-   
+
       const config = {
          method: 'post',
          maxBodyLength: Infinity,
@@ -50,18 +54,19 @@ app.post('/refresh', async (req, res) => {
          },
          data: data
       }
-   
+
       const dc_res = await axios.request(config).catch(async (err) => {
          console.log(err)
+         await sleep(5000)
          start = false
       })
-   
+
       if (!dc_res) return;
-   
+
       var new_url = dc_res.data?.refreshed_urls[0]?.refreshed
-   
+
       heat -= 1
-   
+
       return res.json({
          message: 'Media file successfully refreshed',
          url: new_url
