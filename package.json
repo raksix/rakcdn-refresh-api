@@ -16,6 +16,6 @@
       "express": "^4.21.1"
    },
    "engines": {
-      "node": "20.x"
+      "node": "16.x"
    }
 }
