@@ -84,13 +84,19 @@ const wait_func = () => new Promise(async (resolve) => {
 app.post('/upload', async (req, res) => {
    const {
       webhook,
-      buffer_images,
+      imagesdata,
       video
    } = req.body;
+
+   if(!webhook || !imagesdata) return res.json({
+      error: true,
+      message: 'Hepsini gir la'
+   })
 
    const mangaClient = new WebhookClient({ url: webhook });
 
 
+   const buffer_images = JSON.parse(imagesdata)
    
    const images = []
 
@@ -128,7 +134,7 @@ app.post('/upload', async (req, res) => {
 
 
             atc.setFile(a)
-            atc.setName('video.ts')
+            video ? atc.setName('video.ts') : null
 
             mangaClient.send({
                files: video ? [atc] : [{
