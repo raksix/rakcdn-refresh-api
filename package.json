@@ -15,8 +15,5 @@
       "cors": "^2.8.5",
       "express": "^4.21.1",
       "discord.js": "^14.14.1"
-   },
-   "engines": {
-      "node": "16.x"
    }
 }
