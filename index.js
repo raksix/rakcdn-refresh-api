@@ -3,6 +3,7 @@ const { name, id } = require('./config')
 const app = express()
 const cors = require('cors');
 const { default: axios } = require('axios');
+const { WebhookClient, AttachmentBuilder } = require('discord.js');
 
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
@@ -73,6 +74,125 @@ app.post('/refresh', async (req, res) => {
       })
    }
 })
+
+
+const wait_func = () => new Promise(async (resolve) => {
+   await sleep(30000)
+   resolve()
+})
+
+app.post('/upload', async (req, res) => {
+   const {
+      webhook,
+      buffer_images,
+      video
+   } = req.body;
+
+   const mangaClient = new WebhookClient({ url: webhook });
+
+
+   
+   const images = []
+
+   buffer_images.map(a => {
+      if (!images.includes(a)) {
+         images.push(a)
+      }
+   })
+
+
+   try {
+      const upload_all_images = () => new Promise(async (resolve) => {
+         var index = 0
+         var n_index = -1
+
+         var waits = [1]
+         const dc_images = []
+
+
+
+         setInterval(async () => {
+            if (index === n_index) return
+            if (dc_images.length === images.length) return resolve(dc_images)
+
+            if (String(index).slice(1, 2) === 0) await wait_func()
+
+            n_index = index;
+
+            const a = images[index]
+
+            if (!a) return resolve(dc_images)
+
+            let atc = new AttachmentBuilder();
+
+
+
+            atc.setFile(a)
+            atc.setName('video.ts')
+
+            mangaClient.send({
+               files: video ? [atc] : [{
+                  attachment: a,
+               }],
+               username: "Turkmanga",
+            }).then(async (message) => {
+               if (!message.attachments[0]?.proxy_url) return index -= 1
+               dc_images.push(message.attachments[0].proxy_url)
+               index += 1
+               console.log(`${index}/${images.length}`)
+            }).catch(err => {
+               console.log(err)
+               index -= 1
+            })
+         })
+      })
+
+      upload_all_images().then(images => {
+         return res.json({
+            error: false,
+            images
+         })
+      })
+   } catch (error) {
+      return res.json({
+         error: true,
+         message: 'Resimler uplaodlanırken hata oluştu!'
+      })
+   } 
+})
+
+
+/*
+
+
+
+
+   mangaClient.send({
+      files: [{
+         attachment: buffer
+      }],
+      username: "Turkmanga",
+   }).then(async (message) => {
+
+      if (!message.attachments[0]?.proxy_url) return index -= 1
+      dc_images.push(message.attachments[0].proxy_url)
+      index += 1
+
+      return res.json({
+         error: false,
+         image: message.attachments[0]?.proxy_url
+      })
+      console.log(`${index}/${images.length}`)
+   }).catch(err => {
+      console.log(err)
+      return res.json({
+         error: true,
+         message: 'Resim yüklenmedi!'
+      })
+   })
+
+
+*/
 
 setInterval(() => {
    heat = 0 // arada bug olduğu için 10 dakikada bir yükü sıfırlıyor!
