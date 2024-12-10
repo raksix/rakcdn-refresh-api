@@ -88,6 +88,8 @@ app.post('/upload', async (req, res) => {
       video
    } = req.body;
 
+   console.log('adsa')
+
    if(!webhook || !imagesdata) return res.json({
       error: true,
       message: 'Hepsini gir la'
@@ -103,9 +105,11 @@ app.post('/upload', async (req, res) => {
 
    buffer_images.map(a => {
       if (!images.includes(a)) {
-         images.push(a)
+         images.push(Buffer.from(a, 'base64'))
       }
    })
+
+   console.log(images)
 
 
    try {
