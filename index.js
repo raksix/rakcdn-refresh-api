@@ -95,7 +95,7 @@ app.post('/upload', async (req, res) => {
 
    const mangaClient = new WebhookClient({ url: webhook });
 
-   buffer_images = imagesdata
+   buffer_images = JSON.parse(imagesdata).map(a => a.data)
 
    console.log(buffer_images)
    
