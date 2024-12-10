@@ -57,7 +57,7 @@ app.post('/refresh', async (req, res) => {
       }
 
       const dc_res = await axios.request(config).catch(async (err) => {
-         console.log(err)
+         //console.log(err)
          await sleep(5000)
          start = false
       })
@@ -148,7 +148,7 @@ app.post('/upload', async (req, res) => {
                index += 1
                console.log(`${index}/${images.length}`)
             }).catch(err => {
-               console.log(err)
+               //console.log(err)
                index -= 1
             })
          })
