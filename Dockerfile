@@ -1,5 +1,5 @@
 # Use Node.js v14
-FROM node:14
+FROM node:18
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,6 +14,6 @@ RUN npm install
 COPY . .
 
 # Expose the port
-EXPOSE 2005
+EXPOSE 3000
 
 CMD [ "node", "app.js" ]
