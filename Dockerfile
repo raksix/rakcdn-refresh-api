@@ -1,39 +1,19 @@
-# syntax = docker/dockerfile:1
+# Use Node.js v14
+FROM node:14
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=22.12.0
-FROM node:${NODE_VERSION}-slim as base
+# Create app directory
+WORKDIR /usr/src/app
 
-LABEL fly_launch_runtime="Node.js"
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 
-# Node.js app lives here
-WORKDIR /app
-
-# Set production environment
-ENV NODE_ENV="production"
-
-
-# Throw-away build stage to reduce size of final image
-FROM base as build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
-
-# Install node modules
-COPY package.json ./
 RUN npm install
 
-# Copy application code
+# Bundle app source
 COPY . .
 
-
-# Final stage for app image
-FROM base
-
-# Copy built application
-COPY --from=build /app /app
-
-# Start the server by default, this can be overwritten at runtime
+# Expose the port
 EXPOSE 2005
-CMD [ "npm", "run", "start" ]
+
+CMD [ "node", "app.js" ]
