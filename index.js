@@ -212,4 +212,4 @@ setInterval(() => {
    heat = 0 // arada bug olduğu için 10 dakikada bir yükü sıfırlıyor!
 }, 10 * 60 * 1000)
 
-app.listen(process.env.PORT || 7776)
+app.listen(process.env.PORT || 2005)
