@@ -15,7 +15,9 @@
       "axios": "^1.7.7",
       "cors": "^2.8.5",
       "discord.js": "^14.14.1",
-      "express": "^4.21.1"
+      "express": "^4.21.1",
+      "https-proxy-agent": "^7.0.6",
+      "multi-proxy-checker": "^1.0.0"
    },
    "devDependencies": {
       "@flydotio/dockerfile": "^0.5.9"
