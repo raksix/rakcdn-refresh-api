@@ -62,13 +62,6 @@ app.post('/refresh', async (req, res) => {
 
       let i = Math.floor(Math.random() * proxy_list.getWork().length);
 
-      const proxy = proxy_list.getWork()[i]
-      //console.log(proxy)
-
-     // Proxy URL'yi httpsAgent üzerinden tanımla
-
-     console.log('istek geldi')
-
       const config = {
          method: 'post',
          maxBodyLength: Infinity,
@@ -81,13 +74,10 @@ app.post('/refresh', async (req, res) => {
          data: data,
       }
 
-      console.log('discord istek gönder baba')
 
       const dc_res = await axios.request(config).catch(async (err) => {
          console.log(err)
-         //console.log('yeter artık discord adam')
          await sleep(1000)
-         start = false
       })
 
       if (!dc_res) return;
