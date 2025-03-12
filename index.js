@@ -54,7 +54,6 @@ app.post('/refresh', async (req, res) => {
       });
 
 
-      let i = Math.floor(Math.random() * proxy_list.getWork().length);
 
       const config = {
          method: 'post',
