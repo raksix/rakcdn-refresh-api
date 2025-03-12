@@ -5,7 +5,8 @@
    "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
       "start": "node index.js",
-      "dev": "nodemon index.js"
+      "dev": "nodemon index.js",
+      "deploy": "/home/raksix/.fly/bin/flyctl deploy"
    },
    "author": "",
    "license": "ISC",
@@ -14,7 +15,8 @@
       "axios": "^1.7.7",
       "cors": "^2.8.5",
       "discord.js": "^14.14.1",
+      "discord.js": "^14.14.1",
       "express": "^4.21.1",
-      "js-yaml": "^4.1.0"
+      "discord.js": "^14.14.1"
    }
 }

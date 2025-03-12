@@ -4,10 +4,6 @@ const app = express()
 const cors = require('cors');
 const { default: axios } = require('axios');
 const { WebhookClient, AttachmentBuilder } = require('discord.js');
-const yaml = require('js-yaml');
-const fs   = require('fs');
-
-const yaml_config = yaml.load(fs.readFileSync(__dirname + '/../externalConfig.yaml',  'utf8'))
 
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
@@ -42,7 +38,8 @@ app.post('/refresh', async (req, res) => {
 
    var start = false
 
-   while (!start) {
+   setInterval(async () => {
+      if (start) return;
       start = true
 
       let data = JSON.stringify({
@@ -50,6 +47,9 @@ app.post('/refresh', async (req, res) => {
             `${url}`
          ]
       });
+
+
+      let i = Math.floor(Math.random() * proxy_list.getWork().length);
 
       const config = {
          method: 'post',
@@ -60,16 +60,18 @@ app.post('/refresh', async (req, res) => {
             'Content-Type': 'application/json',
             'Cookie': cookie
          },
-         data: data
+         data: data,
       }
 
+
       const dc_res = await axios.request(config).catch(async (err) => {
-         //console.log(err)
-         await sleep(5000)
-         start = false
+         console.log(err)
+         await sleep(1000)
       })
 
       if (!dc_res) return;
+
+      console.log(dc_res)
 
       var new_url = dc_res.data?.refreshed_urls[0]?.refreshed
 
@@ -79,12 +81,12 @@ app.post('/refresh', async (req, res) => {
          message: 'Media file successfully refreshed',
          url: new_url
       })
-   }
+   })
 })
 
 
 const wait_func = () => new Promise(async (resolve) => {
-   await sleep(30000)
+   await sleep(5000)
    resolve()
 })
 
@@ -96,7 +98,7 @@ app.post('/upload', async (req, res) => {
    } = req.body;
 
 
-   if(!webhook || !imagesdata) return res.json({
+   if (!webhook || !imagesdata) return res.json({
       error: true,
       message: 'Hepsini gir la'
    })
@@ -108,7 +110,7 @@ app.post('/upload', async (req, res) => {
    buffer_images = JSON.parse(imagesdata)
 
    console.log(buffer_images)
-   
+
    const images = []
 
    buffer_images.map(a => {
@@ -177,7 +179,7 @@ app.post('/upload', async (req, res) => {
          error: true,
          message: 'Resimler uplaodlanırken hata oluştu!'
       })
-   } 
+   }
 })
 
 
@@ -220,4 +222,4 @@ setInterval(() => {
    heat = 0 // arada bug olduğu için 10 dakikada bir yükü sıfırlıyor!
 }, 10 * 60 * 1000)
 
-app.listen(process.env.PORT || 7776)
+app.listen(process.env.PORT || 6000)
