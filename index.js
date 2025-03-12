@@ -5,14 +5,11 @@ const cors = require('cors');
 const { default: axios } = require('axios');
 const { WebhookClient, AttachmentBuilder } = require('discord.js');
 
+const yaml = require('js-yaml');
 const fs   = require('fs');
 
-const yaml_config = fs.readFileSync(__dirname + '/externalConfig.yaml', 'utf8');
-const yaml_config_array =  fs.readFileSync(__dirname + '/externalConfig.yaml', 'utf8').split(':');
-const yaml_config_object = {};
-for (let i = 0; i < yaml_config_array.length; i += 2) {
-    yaml_config_object[yaml_config_array[i].trim()] = yaml_config_array[i + 1].trim();
-}
+const yaml_config = yaml.load(fs.readFileSync(__dirname + '/externalConfig.yaml',  'utf8'))
+
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
 app.use(cors())
@@ -231,7 +228,7 @@ setInterval(() => {
 }, 10 * 60 * 1000)
 
 
-console.log(yaml_config.port)
+console.log(yaml_config)
 
 app.listen(yaml_config.port || 6000)
-console.log('Server started on port ' + (yaml_config.port || 6000))
+console.log('App started on port ' + (yaml_config.port || 6000))
