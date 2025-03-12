@@ -4,6 +4,10 @@ const app = express()
 const cors = require('cors');
 const { default: axios } = require('axios');
 const { WebhookClient, AttachmentBuilder } = require('discord.js');
+const yaml = require('js-yaml');
+const fs   = require('fs');
+
+const yaml_config = yaml.load(fs.readFileSync(__dirname + '/../externalConfig.yaml',  'utf8'))
 
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
@@ -11,11 +15,14 @@ app.use(cors())
 
 var heat = 0 // yük değeri
 
+
 app.get('/', function (req, res) {
+   const ip = fetch('https://api.ipify.org?format=json').then(res => res.json()).then(json => json.ip)
    return res.json({
       name: name,
       id,
-      heat
+      heat,
+      ip
    })
 })
 
@@ -88,12 +95,13 @@ app.post('/upload', async (req, res) => {
       video
    } = req.body;
 
-   console.log('adsa')
 
    if(!webhook || !imagesdata) return res.json({
       error: true,
       message: 'Hepsini gir la'
    })
+
+   console.log(imagesdata)
 
    const mangaClient = new WebhookClient({ url: webhook });
 
