@@ -233,3 +233,4 @@ setInterval(() => {
 
 
 app.listen(yaml_config.port || 6000)
+console.log('Server started on port ' + (yaml_config.port || 6000))
