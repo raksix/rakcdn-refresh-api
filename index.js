@@ -8,7 +8,8 @@ const { WebhookClient, AttachmentBuilder } = require('discord.js');
 const yaml = require('js-yaml');
 const fs   = require('fs');
 
-const yaml_config = yaml.load(fs.readFileSync(__dirname + '/../externalConfig.yaml',  'utf8'))
+const yaml_config = yaml.load(fs.readFileSync(__dirname + '/externalConfig.yaml',  'utf8'))
+
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
 app.use(cors())
@@ -16,8 +17,8 @@ app.use(cors())
 var heat = 0 // yük değeri
 
 
-app.get('/', function (req, res) {
-   const ip = fetch('https://api.ipify.org?format=json').then(res => res.json()).then(json => json.ip)
+app.get('/', async function (req, res) {
+   const ip = await fetch('https://api.ipify.org?format=json').then(res => res.json()).then(a => a.ip)
    return res.json({
       name: name,
       id,
@@ -226,4 +227,6 @@ setInterval(() => {
    heat = 0 // arada bug olduğu için 10 dakikada bir yükü sıfırlıyor!
 }, 10 * 60 * 1000)
 
-app.listen(process.env.PORT || 6000)
+
+
+app.listen(yaml_config.port || 6000)
