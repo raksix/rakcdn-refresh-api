@@ -19,12 +19,11 @@ var heat = 0 // yük değeri
 
 app.get('/', async function (req, res) {
    const ip = await fetch('https://api.ipify.org?format=json').then(res => res.text())
-   console.log(ip)
    return res.json({
       name: name,
       id,
       heat,
-      ip
+      ip: String(ip)
    })
 })
 
