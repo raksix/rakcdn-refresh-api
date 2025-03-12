@@ -5,6 +5,10 @@ const cors = require('cors');
 const { default: axios } = require('axios');
 const { WebhookClient, AttachmentBuilder } = require('discord.js');
 
+const yaml = require('js-yaml');
+const fs   = require('fs');
+
+const yaml_config = yaml.load(fs.readFileSync(__dirname + '/../externalConfig.yaml',  'utf8'))
 
 app.use(express.urlencoded({ extended: true, limit: '100000mb' }));
 app.use(cors())
