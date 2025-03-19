@@ -75,7 +75,6 @@ app.post('/refresh', async (req, res) => {
 
       if (!dc_res) return;
 
-      console.log(dc_res)
 
       var new_url = dc_res.data?.refreshed_urls[0]?.refreshed
 
