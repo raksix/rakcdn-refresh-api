@@ -70,10 +70,12 @@ app.post('/refresh', async (req, res) => {
 
       const dc_res = await axios.request(config).catch(async (err) => {
          console.log(err)
-         await sleep(1000)
       })
 
-      if (!dc_res) return;
+      if (!dc_res) return res.json({
+         error: true,
+         message: 'Discord API error'
+      })
 
 
       var new_url = dc_res.data?.refreshed_urls[0]?.refreshed
