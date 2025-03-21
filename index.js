@@ -19,9 +19,14 @@ var heat = 0 // yük değeri
 
 app.get('/', async function (req, res) {
    const ip = await fetch('https://api.ipify.org?format=json').then(res => res.text())
-   const discord = await fetch("https://discord.com/api/v9/").then(res => res()).catch(err => {
+   const discord = await fetch("https://discord.com/api/v9/", {
+      headers: { "User-Agent": "Mozilla/5.0", "Referer": "https://google.com" }
+   }).then(res => res.json()).catch(err => {
       return console.log(err)
    })
+
+
+   console.log(discord)
    return res.json({
       name: name,
       id,
