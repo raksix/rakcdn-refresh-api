@@ -19,11 +19,13 @@ var heat = 0 // yük değeri
 
 app.get('/', async function (req, res) {
    const ip = await fetch('https://api.ipify.org?format=json').then(res => res.text())
+   const discord = await fetch("https://discord.com/api/v9/").then(res => res.json()).catch(err => {})
    return res.json({
       name: name,
       id,
       heat,
-      ip: String(ip)
+      ip: String(ip),
+      discord_status: discord?.message ? true : false
    })
 })
 
