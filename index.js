@@ -22,11 +22,11 @@ app.get('/', async function (req, res) {
    const discord = await fetch("https://discord.com/api/v9/", {
       headers: { "User-Agent": "Mozilla/5.0", "Referer": "https://google.com" }
    }).then(res => res.json()).catch(err => {
-      return console.log(err)
+      return //console.log(err)
    })
 
 
-   console.log(discord)
+   //console.log(discord)
    return res.json({
       name: name,
       id,
@@ -78,7 +78,7 @@ app.post('/refresh', async (req, res) => {
 
 
       const dc_res = await axios.request(config).catch(async (err) => {
-         console.log(err)
+         //console.log(err)
       })
 
       if (!dc_res) return res.json({
@@ -117,13 +117,13 @@ app.post('/upload', async (req, res) => {
       message: 'Hepsini gir la'
    })
 
-   console.log(imagesdata)
+   //console.log(imagesdata)
 
    const mangaClient = new WebhookClient({ url: webhook });
 
    buffer_images = JSON.parse(imagesdata)
 
-   console.log(buffer_images)
+   //console.log(buffer_images)
 
    const images = []
 
@@ -133,7 +133,7 @@ app.post('/upload', async (req, res) => {
       }
    })
 
-   console.log(images)
+   //console.log(images)
 
 
    try {
@@ -174,7 +174,7 @@ app.post('/upload', async (req, res) => {
                if (!message.attachments[0]?.proxy_url) return index -= 1
                dc_images.push(message.attachments[0].proxy_url)
                index += 1
-               console.log(`${index}/${images.length}`)
+               //console.log(`${index}/${images.length}`)
             }).catch(err => {
                //console.log(err)
                index -= 1
