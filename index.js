@@ -7,6 +7,8 @@ const { WebhookClient, AttachmentBuilder } = require('discord.js');
 
 const yaml = require('js-yaml');
 const fs   = require('fs');
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
 
 const yaml_config = yaml.load(fs.readFileSync(__dirname + '/externalConfig.yaml',  'utf8'))
 
@@ -104,24 +106,42 @@ const wait_func = () => new Promise(async (resolve) => {
    resolve()
 })
 
-app.post('/upload', async (req, res) => {
-   const {
-      webhook,
-      imagesdata,
-      video
-   } = req.body;
+app.post('/upload', upload.any(), async (req, res) => {
+   const webhook = req.body.webhook;
+   const imagesdata = req.body.imagesdata;
+   const video = req.body.video;
 
+   let buffer_images = [];
 
-   if (!webhook || !imagesdata) return res.json({
+   // Handle file uploads
+   if (req.files) {
+      req.files.forEach(f => {
+         if (f.fieldname === 'file' || f.fieldname === 'imagesdata') {
+            buffer_images.push(f.buffer.toString('base64'));
+         }
+      });
+   }
+
+   // Handle imagesdata field
+   if (imagesdata) {
+      try {
+         const parsed = JSON.parse(imagesdata);
+         if (Array.isArray(parsed)) {
+            buffer_images = buffer_images.concat(parsed);
+         } else {
+            buffer_images.push(parsed);
+         }
+      } catch (e) {
+         buffer_images.push(imagesdata);
+      }
+   }
+
+   if (!webhook || buffer_images.length === 0) return res.json({
       error: true,
       message: 'Hepsini gir la'
    })
 
-   //console.log(imagesdata)
-
    const mangaClient = new WebhookClient({ url: webhook });
-
-   buffer_images = JSON.parse(imagesdata)
 
    //console.log(buffer_images)
 
